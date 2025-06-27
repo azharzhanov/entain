@@ -3,6 +3,7 @@ package transactions
 import (
 	"context"
 	"fmt"
+	"github.com/go-kit/log"
 	"strconv"
 
 	errors "entain/internal/error"
@@ -22,6 +23,7 @@ func NewService(
 	transactionRepository domain.TransactionRepository,
 	accountRepository domain.AccountRepository,
 	txRepository domain.TxRepository,
+	logger log.Logger,
 ) domain.TransactionService {
 	var service domain.TransactionService
 	{
@@ -30,6 +32,7 @@ func NewService(
 			accountRepository,
 			txRepository,
 		)
+		service = loggingServiceMiddleware(logger)(service)
 	}
 	return service
 }

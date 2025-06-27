@@ -1,12 +1,13 @@
-package account
+package accounts
 
 import (
 	"context"
 	"fmt"
 
 	errors "entain/internal/error"
-
 	"entain/internal/domain"
+
+	"github.com/go-kit/log"
 )
 
 type service struct {
@@ -14,10 +15,14 @@ type service struct {
 }
 
 // NewService creates a new user service with the provided repository.
-func NewService(repository domain.AccountRepository) domain.AccountService {
+func NewService(
+	repository domain.AccountRepository,
+	logger log.Logger,
+) domain.AccountService {
 	var service domain.AccountService
 	{
 		service = newBasicService(repository)
+		service = loggingServiceMiddleware(logger)(service)
 	}
 	return service
 }

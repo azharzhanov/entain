@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	client "entain/integrationtest/client"
-	"entain/internal/account"
+	"entain/internal/accounts"
 	"entain/internal/domain"
 
 	"github.com/google/uuid"
@@ -76,7 +76,7 @@ func TestConcurrencyWinTransactions(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 200, response.StatusCode(), "Expected a 200 OK for account retrieval after transactions")
 
-	result := account.GetAccountResponseBody{}
+	result := accounts.GetAccountResponseBody{}
 	require.NoError(t, response.Read(&result))
 	require.Equal(t, expected, result.Data, "Expected account balance to be updated correctly after concurrent transactions")
 }
@@ -143,7 +143,7 @@ func TestConcurrencyLoseTransactions(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, 200, response.StatusCode(), "Expected a 200 OK for account retrieval after transactions")
 
-	result := account.GetAccountResponseBody{}
+	result := accounts.GetAccountResponseBody{}
 	require.NoError(t, response.Read(&result))
 	require.Equal(t, expected, result.Data, "Expected account balance to be updated correctly after concurrent transactions")
 }

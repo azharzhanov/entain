@@ -131,7 +131,7 @@
           "$ref": "#/definitions/ResponseStatus"
         }
       },
-      "x-go-package": "entain/internal/account"
+      "x-go-package": "entain/internal/accounts"
     },
     "ResponseStatus": {
       "type": "string",

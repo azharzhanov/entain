@@ -24,7 +24,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	pkgAccount "entain/internal/account"
+	pkgAccount "entain/internal/accounts"
 	pkgDatabase "entain/internal/database/postgres"
 	pkgHelpers "entain/internal/helpers"
 	pkgTransaction "entain/internal/transactions"
@@ -103,8 +103,12 @@ func main() {
 			transactionRepository,
 			accountRepository,
 			sqlcRepository,
+			logger,
 		)
-		accountService = pkgAccount.NewService(accountRepository)
+		accountService = pkgAccount.NewService(
+			accountRepository,
+			logger,
+		)
 	)
 
 	// Endpoints layer
