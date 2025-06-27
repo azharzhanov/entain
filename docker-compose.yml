@@ -41,6 +41,7 @@ services:
       - ./:/app
     depends_on:
       - postgres
+      - migrations
 
 volumes:
   postgres_data:
