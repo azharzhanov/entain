@@ -1,0 +1,212 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "The purpose of this application is to provide a complete API for Entain technical task.",
+    "title": "API.",
+    "version": "0.127.0"
+  },
+  "host": "localhost",
+  "basePath": "/",
+  "paths": {
+    "/user/{user_id}/balance": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Returns the account of the user by id.",
+        "operationId": "GetAccountRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "UserID",
+            "description": "The ID of the user whose balance is being requested.",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetAccountResponse"
+          },
+          "default": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/transaction": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Aggregates a transaction for a user.",
+        "operationId": "AggregateTransactionRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "uint64",
+            "x-go-name": "UserID",
+            "description": "UserID is the ID of the user for whom the transaction is being created.",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "SourceType",
+            "description": "SourceType indicates the source of the transaction, such as \"game\", \"server\", \"payment\".",
+            "name": "source_type",
+            "in": "header",
+            "required": true
+          },
+          {
+            "x-go-name": "Transaction",
+            "description": "Transaction contains the details of the transaction to be created.",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TransactionWrite"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AggregateTransactionResponse"
+          },
+          "default": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AccountRead": {
+      "type": "object",
+      "title": "AccountRead represents the account information of a user.",
+      "properties": {
+        "balance": {
+          "description": "Balance is the current balance of the user.",
+          "type": "string",
+          "x-go-name": "Balance"
+        },
+        "userId": {
+          "description": "UserID is the unique identifier of the user.",
+          "type": "integer",
+          "format": "uint64",
+          "x-go-name": "UserID"
+        }
+      },
+      "x-go-package": "entain/internal/domain"
+    },
+    "AggregateTransactionResponseBody": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "x-go-package": "entain/internal/transactions"
+    },
+    "GetAccountResponseBody": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/AccountRead"
+        },
+        "status": {
+          "$ref": "#/definitions/ResponseStatus"
+        }
+      },
+      "x-go-package": "entain/internal/account"
+    },
+    "ResponseStatus": {
+      "type": "string",
+      "title": "ResponseStatus - represents the response status.",
+      "x-go-package": "entain/internal/domain"
+    },
+    "TransactionWrite": {
+      "type": "object",
+      "title": "TransactionWrite represents read transaction model.",
+      "properties": {
+        "amount": {
+          "description": "Amount indicates the amount of the transaction.",
+          "type": "string",
+          "x-go-name": "Amount"
+        },
+        "state": {
+          "description": "State indicates the state of the transaction.\nPossible values for `state` field are: (`win`, `lose`)\n\n`win` - request must increase the user balance\n`lose` - request must decrease user balance",
+          "type": "string",
+          "x-go-name": "State"
+        },
+        "transactionId": {
+          "description": "TransactionID is the unique identifier for the transaction.",
+          "type": "string",
+          "x-go-name": "TransactionID"
+        }
+      },
+      "x-go-package": "entain/internal/domain"
+    },
+    "defaultErrorResponse": {
+      "type": "object",
+      "title": "DefaultErrResponse is the default error that is generated by the gateway.",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-name": "DefaultErrResponse",
+      "x-go-package": "entain/internal/error"
+    }
+  },
+  "responses": {
+    "AggregateTransactionResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/AggregateTransactionResponseBody"
+      }
+    },
+    "GetAccountResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/GetAccountResponseBody"
+      }
+    },
+    "errorResponse": {
+      "description": "ErrResponse is the default error response that is generated by the gateway.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "x-go-name": "Data"
+          },
+          "error": {
+            "$ref": "#/definitions/defaultErrorResponse"
+          },
+          "status": {
+            "$ref": "#/definitions/ResponseStatus"
+          }
+        }
+      }
+    }
+  }
+}
