@@ -1,4 +1,24 @@
-# Entain Test task
+# Entain
+
+## Running the Application with Docker Compose 
+
+1. Clone the GitHub Repository
+```bash
+git clone https://github.com/azharzhanov/entain.git
+cd entain
+```
+
+2. Run the Application
+```bash
+docker-compose up -d
+```
+
+3. Run integration tests
+```bash
+docker-compose -f docker-compose.integration-test.yml up -d
+```
+
+## Task Description
 The main goal of this test task is a develop the application for processing the incoming requests from the 3d-party providers.
 
 The application must have an HTTP URL to receive incoming `POST` requests.
@@ -84,28 +104,3 @@ Response should have 2 required fields in `json` format (if you need other field
   "balance": "9.25" // string, rounded to 2 decimal places
 }
 ```
-
-Goals:
-1. Prepare base code +
-2. Implement database schema
-   - Create a PostgreSQL database schema to store user data and transactions. +
-   - Define tables for users and transactions, ensuring that the `transactionId` is unique to prevent duplicate processing. +
-   - Use appropriate data types for fields (e.g., `numeric` for balance, `text` for transactionId). ?
-   - Ensure that the schema supports the required operations efficiently. +
-2. Implement domain and service layers
-   - Create a `User` struct with fields for `userId`, `balance`, and a map to track transactions.
-   - Implement methods to handle transactions and balance retrieval.
-   - Use a PostgreSQL database to persist user data and transactions.
-   - Use a transaction ID to ensure idempotency of requests.
-   - Handle different states (`win`, `lose`) to update the balance accordingly.
-   - Ensure that the balance cannot go negative.
-   - Implement a mechanism to handle concurrent requests safely, possibly using transactions in PostgreSQL and appropriate locking mechanisms.
-3. Implement GET and POST handlers
-   - Create HTTP handlers for the `POST /user/{userId}/transaction` and `GET /user/{userId}/balance` routes.
-   - Use a router like `gorilla/mux` to handle routing. +
-   - Validate incoming requests and return appropriate HTTP status codes. +
-5. Prepare docker-compose file +
-6. Prepare README file with instructions how to run and test the application
-7. Prepare Dockerfile for the application +
-8. Prepare Dockerfile for the integration tests
-10. 

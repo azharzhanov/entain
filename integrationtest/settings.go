@@ -1,7 +1,11 @@
 package integrationtest
 
+import (
+	"os"
+)
+
 var (
-	integrationTestBaseURL = "http://localhost:8080" // Default base URL for integration tests
+	integrationTestBaseURL = os.Getenv("BASE_URL") // Default base URL for integration tests
 )
 
 // Endpoints

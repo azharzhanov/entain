@@ -5,8 +5,6 @@ services:
     container_name: postgres
     image: postgres:13.4
     restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data:z
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -42,6 +40,16 @@ services:
       - postgres
       - migrations
 
-volumes:
-  postgres_data:
-    driver: local
+  integration-test:
+    image: golang:1.22-alpine
+    working_dir: /app
+    command: go test ./integrationtest -v
+    environment:
+      - BASE_URL=http://app:8080
+    volumes:
+      - ./:/app
+    depends_on:
+      - app
+      - postgres
+      - migrations
+
