@@ -1,0 +1,47 @@
+version: '3.4'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13.4
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data:z
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  migrations:
+    image: golang:1.22.10-alpine
+    working_dir: /migrations
+    command: go run ./schema/postgresql/cmd/main.go
+    environment:
+      - DSN=user=postgres password=postgres host=postgres port=5432 dbname=postgres sslmode=disable
+    volumes:
+      - ./:/migrations
+    depends_on:
+      - postgres
+
+  app:
+    image: golang:1.22.10-alpine
+    working_dir: /app
+    command: go run cmd/main.go
+    environment:
+      - ENVIRONMENT=dev
+      - PORT=8080
+      - DSN=user=postgres password=postgres host=postgres port=5432 dbname=postgres sslmode=disable
+      - BASE_URL=http://localhost:8080/v2
+      - ALLOWED_ORIGINS=*
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local

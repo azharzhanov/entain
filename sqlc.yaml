@@ -1,0 +1,14 @@
+# https://docs.sqlc.dev/en/stable/overview/install.html
+# https://docs.sqlc.dev/en/stable/tutorials/getting-started-postgresql.html
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./schema/postgresql/queries/"
+    schema: "./schema/postgresql/migrations/"
+
+    gen:
+      go:
+        package: "dbs"
+        sql_package: "database/sql"
+        out: "./schema/postgresql/dbs/"
+        emit_prepared_queries: true

@@ -1,0 +1,8 @@
+USER=postgres
+PORT=5432
+HOST=localhost
+PASSWORD=postgres
+DATABASE=postgres
+OPTIONS=sslmode=disable
+
+POSTGRES_DSN=postgresql://$(USER):$(PASSWORD)@$(HOST):$(PORT)/$(DATABASE)?$(OPTIONS)
